@@ -24,25 +24,62 @@
 
         // Interpolated
         console.log("Hello I am a %s string", "cool");
-    // Styled
+        // Styled
+        console.log("%c I am some great text", "font-size: 25px; background-color: black; color: white;");
 
-    // warning!
+        // warning!
+        console.warn("Oh no!");
 
-    // Error :|
+        // Error :|
+        console.error("Crap!");
 
-    // Info
+        // Info
+        console.info("The sky is blue");
 
-    // Testing
+        // Testing
+        //console.assert(1 === 2, "that is wrong!");
+        const p = document.querySelector("p");
 
-    // clearing
+        console.assert(p.classList.contains("ouch"), "that is wrong!");
 
-    // Viewing DOM Elements
+        // clearing
+        console.clear();
 
-    // Grouping together
+        // Viewing DOM Elements
+        console.dir(p);
 
-    // counting
+        // Grouping together
+        dogs.forEach(dog => {
+            console.groupCollapsed(`${dog.name}`);
+            console.log(`This is ${dog.name}`);
+            console.log(`${dog.name} is ${dog.age * 7} dog years old`);
+            console.groupEnd(`${dog.name}`);
+        });
 
-    // timing
+        // counting
+        console.count("wes")
+        console.count("wes")
+        console.count("steve")
+        console.count("steve")
+        console.count("wes")
+        console.count("wes")
+        console.count("wes")
+        console.count("wes")
+        console.count("wes")
+        console.count("steve")
+        console.count("steve")
+        console.count("steve")
+        console.count("steve")
+        console.count("steve")
+
+        // timing
+        console.time("fetching data");
+        fetch("https://api.github.com/users/wesbos")
+            .then(data => data.json())
+            .then(data => {
+                console.timeEnd("fetching data");
+                console.log(data);
+            })
 
     </script>
 </body>
