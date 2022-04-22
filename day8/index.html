@@ -8,13 +8,22 @@
 
 <body>
     <h1>Draw Below</h1>
-    <label for="size">Size: <span id="pxSize">10px</span></label>
-    <input id="size" type="range" name="size" min="1" max="200" value="10" data-sizing="px">
-    <label for="color">Color</label>
-    <input id="color" type="color" name="color" value="#37be59">
+    <div id="inputContainer">
+        <div><label for="size">Size: <span id="pxSize">10px</span></label>
+            <input id="sizeTxt" type="text" min="1" max="200" value="5px">
+            <input id="size" type="range" name="size" min="1" max="200" value="10" data-sizing="px">
+        </div>
+        <div><label for="color">Color: </label>
+            <input id="color" type="color" name="color" value="#000000">
+        </div>
+    </div>
     <div class="container"><canvas id="draw"></canvas></div>
 
     <style>
+        :root {
+            --color: #ff0000;
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -40,7 +49,11 @@
             text-transform: uppercase;
             font-size: 80px;
             color: white;
-            grid-column-start: span 10;
+            grid-column-start: span 5;
+            grid-column-start: 2;
+            grid-column-end: 10;
+            grid-row-start: 1;
+            grid-row-end: 2;
         }
 
         #draw {
@@ -53,8 +66,32 @@
             border: 5px ridge rgb(100, 100, 100);
             grid-column-start: 2;
             grid-column-end: 10;
-            grid-row-start: 3;
+            grid-row-start: 4;
             grid-row-end: 10;
+        }
+
+        #inputContainer {
+            grid-column-start: 2;
+            grid-column-end: 10;
+            grid-row-start: 3;
+            grid-row-end: 4;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: baseline;
+        }
+
+        #inputContainer>* {
+            display: flex;
+            justify-content: baseline;
+            align-items: center;
+        }
+
+        #sizeTxt {
+            width: 6ch;
+        }
+
+        #sizeTxt:focus {
+            outline: var(--color);
         }
     </style>
 
@@ -63,9 +100,14 @@
         const ctx = canvas.getContext("2d");
         const container = document.querySelector(".container");
 
+        const size = document.querySelector("#size");
+        const sizeTxt = document.querySelector("#sizeTxt");
+        const sizeDisplay = document.querySelector("#pxSize");
+        const color = document.querySelector("#color");
+
         canvas.width = container.clientWidth;
         canvas.height = container.clientHeight;
-        ctx.strokeStyle = "#bada55";
+        ctx.strokeStyle = "#000000";
         ctx.lineJoin = "round";
         ctx.lineCap = "round";
         ctx.lineWidth = 10;
@@ -76,9 +118,19 @@
         let hue = 0;
         let direction = true;
 
+        function colorChange() {
+            ctx.strokeStyle = `${color.value}`;
+            console.log(color.value);
+        }
+
+        function sizeChange() {
+            ctx.lineWidth = size.value;
+            sizeDisplay.textContent = `${ctx.lineWidth}` + "px";
+            sizeTxt.value = `${ctx.lineWidth}` + "px";
+        }
+
         function draw(e) {
             if (!isDrawing) return;  //stop the function from running when they are not moused down
-            console.log(e);
             /*ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;*/
             ctx.beginPath();
             ctx.moveTo(lastX, lastY);
@@ -101,6 +153,17 @@
             /*ctx.lineWidth++;*/
         }
 
+        function changeSizewithText() {
+            txtValue = sizeTxt.value;
+            ctx.lineWidth = txtValue;
+            console.log(txtValue);
+        }
+
+        size.addEventListener("mousemove", sizeChange);
+        sizeTxt.addEventListener("keyup", changeSizewithText);
+
+        color.addEventListener("change", colorChange);
+
         canvas.addEventListener('mousedown', (e) => {
             isDrawing = true;
             [lastX, lastY] = [e.offsetX, e.offsetY];
@@ -108,29 +171,6 @@
         canvas.addEventListener('mousemove', draw);
         canvas.addEventListener('mouseup', () => isDrawing = false);
         canvas.addEventListener('mouseout', () => isDrawing = false);
-
-        /*    <input id="size" type="range" name="size" min="1" max="200" value="5" data-sizing="px">
-                <label for="color">Color</label>
-                <input id="color" type="color" name="color" value="#37be59">*/
-        const size = document.querySelector("#size");
-        const sizeDisplay = document.querySelector("#pxSize");
-        const color = document.querySelector("#color");
-
-        /*size.addEventListener("mousedown", change);*/
-        size.addEventListener("mousemove", change);
-
-        function change() {
-            ctx.lineWidth = size.value;
-            sizeDisplay.textContent = `${ctx.lineWidth}` + "px";
-        }
-
-        /*color.addEventListener("mousemove", colorChange);*/
-        color.addEventListener("mouseup", colorChange);
-
-        function colorChange() {
-            ctx.strokeStyle = `${color.value}`;
-            console.log(color.value);
-        }
 
     </script>
 </body>
